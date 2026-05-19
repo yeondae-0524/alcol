@@ -1,9 +1,7 @@
-/* =========================================
-   전체 화면 스타일 (모던 라이트 모드)
-   ========================================= */
+/* 전체 화면 스타일 (모던 라이트 모드) */
 body {
-    background-color: #F2F4F6; /* 토스 앱 같은 아주 연한 쿨그레이 배경 */
-    color: #191F28; /* 완전 검은색보다 세련된 진한 흑회색 */
+    background-color: #F2F4F6;
+    color: #191F28;
     font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
     margin: 0;
     display: flex;
@@ -17,59 +15,85 @@ body {
     width: 100%;
     max-width: 400px;
     padding: 20px;
-    margin-bottom: 80px; /* 살짝 위로 올리기 */
+    margin-bottom: 80px;
 }
 
-/* 메인 타이틀 */
 h1 {
-    color: #FF5A5F; /* 산뜻하고 트렌디한 코랄 레드 */
-    margin-bottom: 40px;
+    color: #FF5A5F;
+    margin-bottom: 30px;
     font-weight: 800;
     letter-spacing: -0.5px;
-    /* 촌스러운 네온 그림자 삭제 */
 }
 
-/* =========================================
-   첫 번째 화면: 모드 선택 버튼
-   ========================================= */
-#button-group {
+/* --- 여기서부터 변경된 인원 입력창 디자인 --- */
+.input-card {
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.input-card p {
+    font-size: 1.1rem;
+    color: #4E5968;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.input-row {
     display: flex;
-    flex-direction: column;
-    gap: 16px; 
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
 }
 
-.mode-button {
-    background-color: #FFFFFF; /* 깔끔한 흰색 카드 */
-    color: #333D4B;
+#player-count {
+    width: 80px;
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    color: #191F28;
+    background-color: #F2F4F6;
     border: none;
-    border-radius: 24px; /* 요즘 유행하는 둥근 모서리 */
-    padding: 28px 20px;
-    font-size: 1.4rem;
+    border-radius: 16px;
+    padding: 10px;
+    outline: none;
+}
+
+/* 숫자 올리고 내리는 화살표 숨기기 (깔끔하게) */
+#player-count::-webkit-inner-spin-button, 
+#player-count::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-row span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #191F28;
+}
+
+#start-btn {
+    background-color: #3182F6; /* 산뜻한 토스 블루 */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 18px 30px;
+    font-size: 1.3rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); /* 아주 은은하고 고급스러운 그림자 */
-    transition: transform 0.1s, background-color 0.2s;
+    width: 100%;
+    transition: transform 0.1s;
+    box-shadow: 0 6px 15px rgba(49, 130, 246, 0.2);
 }
 
-.mode-button span {
-    display: block;
-    font-size: 0.9rem;
-    color: #8B95A1; /* 세련된 회색 텍스트 */
-    margin-top: 8px;
-    font-weight: 500;
-}
-
-/* 터치했을 때 눌리는 느낌 (배경색도 살짝 변함) */
-.mode-button:active {
+#start-btn:active {
     transform: scale(0.96);
-    background-color: #F9FAFB;
 }
 
-/* =========================================
-   두 번째 화면: 게임 화면
-   ========================================= */
-
-/* 1. 결과 텍스트 영역 */
+/* --- 게임 화면 디자인 (기존과 동일) --- */
 #result-text {
     font-size: 2.4rem;
     font-weight: 800;
@@ -84,7 +108,6 @@ h1 {
     align-items: center;
 }
 
-/* 2. 뒤로가기 버튼 (깔끔한 알약 모양) */
 #back-button {
     position: fixed;
     top: 20px;
@@ -100,9 +123,8 @@ h1 {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* 3. 뽑기 버튼 (산뜻하고 통통 튀는 디자인) */
 #draw-button {
-    background-color: #FF5A5F; /* 코랄 레드 단색으로 깔끔하게 */
+    background-color: #FF5A5F;
     color: white;
     border: none;
     border-radius: 30px;
@@ -112,12 +134,11 @@ h1 {
     cursor: pointer;
     width: 90%;
     max-width: 320px;
-    box-shadow: 0 8px 20px rgba(255, 90, 95, 0.25); /* 버튼 색깔에 맞춘 부드러운 그림자 */
+    box-shadow: 0 8px 20px rgba(255, 90, 95, 0.25);
     transition: transform 0.1s;
     margin-top: 20px;
 }
 
 #draw-button:active {
     transform: scale(0.94);
-    box-shadow: 0 4px 10px rgba(255, 90, 95, 0.15);
 }
