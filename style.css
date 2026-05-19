@@ -63,3 +63,59 @@ h1 {
     transform: scale(0.95);
     border-color: #ffcc00; /* 눌렀을 때 노란색 테두리에 불 들어옴! */
 }
+
+/* =========================================
+   여기서부터 게임 화면(두 번째 화면) 전용 디자인 
+   ========================================= */
+
+/* 1. 결과 텍스트 짱 크게 만들기 */
+#result-text {
+    font-size: 2.5rem; /* 글자 크기 대폭 확대 */
+    font-weight: bold;
+    line-height: 1.4;
+    word-break: keep-all;
+    margin: 0;
+    min-height: 150px; /* 글자가 바뀔 때 카드가 흔들리지 않게 높이 고정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. 뒤로가기 버튼 좌측 상단 고정 */
+#back-button {
+    position: fixed; /* 화면 스크롤에 상관없이 고정 */
+    top: 20px;
+    left: 20px;
+    font-size: 1.1rem;
+    color: #aaaaaa;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 100; /* 무조건 맨 위에 오도록 */
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    padding: 8px 15px;
+    border-radius: 15px;
+}
+
+/* 3. 뽑기 버튼 더 크고 영롱하게 (그라데이션 효과) */
+#draw-button {
+    background: linear-gradient(135deg, #ff3366, #ff6b33); /* 핫핑크~오렌지 그라데이션 */
+    color: white;
+    border: none;
+    border-radius: 40px; /* 더 둥글게 */
+    padding: 22px 40px; /* 상하좌우 여백(크기) 확대 */
+    font-size: 1.6rem; /* 글씨 크기 확대 */
+    font-weight: bold;
+    cursor: pointer;
+    width: 90%; /* 화면 꽉 차게 */
+    max-width: 320px;
+    box-shadow: 0 10px 25px rgba(255, 51, 102, 0.5); /* 영롱한 그림자 */
+    transition: all 0.2s;
+    margin-top: 20px;
+}
+
+/* 버튼 눌렀을 때 효과 */
+#draw-button:active {
+    transform: scale(0.92); /* 더 꾹 눌리는 느낌 */
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
+}
