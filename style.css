@@ -1,61 +1,61 @@
 /* 전체 화면 스타일 (다크 모드) */
-        body {
-            background-color: #121212; /* 아주 어두운 회색/검정 */
-            color: #ffffff; /* 글자는 흰색 */
-            font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center; /* 가로 중앙 정렬 */
-            align-items: center; /* 세로 중앙 정렬 */
-            height: 100vh; /* 화면 꽉 차게 */
-        }
+body {
+    background-color: #121212; /* 아주 어두운 회색/검정 */
+    color: #ffffff; /* 글자는 흰색 */
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    height: 100vh; /* 화면 꽉 차게 */
+}
 
-        /* 앱 화면처럼 영역 잡기 */
-        #game-container {
-            text-align: center;
-            width: 100%;
-            max-width: 400px; /* 스마트폰 크기 정도로 제한 */
-            padding: 20px;
-        }
+/* 앱 화면처럼 영역 잡기 */
+#game-container {
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* 스마트폰 크기 정도로 제한 */
+    padding: 20px;
+}
 
-        /* 메인 타이틀 */
-        h1 {
-            color: #ffcc00; /* 노란색 포인트 */
-            margin-bottom: 40px;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); /* 은은한 네온 효과 */
-        }
+/* 메인 타이틀 */
+h1 {
+    color: #ffcc00; /* 노란색 포인트 */
+    margin-bottom: 40px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); /* 은은한 네온 효과 */
+}
 
-        /* 결과가 나오는 카드 영역 */
-        #card-area {
-            background-color: #1e1e1e; /* 배경보다 살짝 밝은 카드 색상 */
-            border-radius: 20px; /* 모서리 둥글게 */
-            padding: 60px 20px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* 공중에 뜬 것 같은 그림자 */
-        }
+/* 결과가 나오는 카드 영역 */
+#card-area {
+    background-color: #1e1e1e; /* 배경보다 살짝 밝은 카드 색상 */
+    border-radius: 20px; /* 모서리 둥글게 */
+    padding: 60px 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* 공중에 뜬 것 같은 그림자 */
+}
 
-        #result-text {
-            font-size: 1.3rem;
-            line-height: 1.5;
-            word-break: keep-all;
-            margin: 0;
-        }
+#result-text {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    word-break: keep-all;
+    margin: 0;
+}
 
-        /* 운명의 뽑기 버튼 */
-        #start-button {
-            background-color: #ff3366; /* 핫핑크/레드 계열 포인트 */
-            color: white;
-            border: none;
-            border-radius: 30px; /* 알약 모양처럼 완전 둥글게 */
-            padding: 18px 40px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4); /* 버튼 그림자 */
-            transition: transform 0.1s; /* 누를 때 애니메이션 속도 */
-        }
+/* 운명의 뽑기 버튼 */
+#start-button {
+    background-color: #ff3366; /* 핫핑크/레드 계열 포인트 */
+    color: white;
+    border: none;
+    border-radius: 30px; /* 알약 모양처럼 완전 둥글게 */
+    padding: 18px 40px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4); /* 버튼 그림자 */
+    transition: transform 0.1s; /* 누를 때 애니메이션 속도 */
+}
 
-        /* 버튼을 터치했을 때 살짝 눌리는 효과 */
-        #start-button:active {
-            transform: scale(0.95);
-        }
+/* 버튼을 터치했을 때 살짝 눌리는 효과 */
+#start-button:active {
+    transform: scale(0.95);
+}
