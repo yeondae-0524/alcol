@@ -96,7 +96,7 @@ drawBtn.addEventListener('click', function() {
             const finalGame = gameList[finalIndex];
 
             // 글자 크기를 키우고 노란색으로 강조 (크기 비율 조절)
-            resultText.innerHTML = `<span style="color:#ffcc00; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#ddd; font-weight:normal;">시작하세요! 🍻</span>`;
+            resultText.innerHTML = `<span style="color:#ffcc00; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#ddd; font-weight:normal;"></span>`;
 
             // 버튼 원래대로 예쁘게 복구
             isSpinning = false;
