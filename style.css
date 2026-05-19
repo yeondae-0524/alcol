@@ -216,3 +216,20 @@ h1 {
     -webkit-user-select: none;
     touch-action: none; 
 }
+/* --- 손가락 터치 동그라미 스타일 --- */
+.finger-circle {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* 손가락 정중앙에 오도록 정렬 */
+    opacity: 0.85;
+    pointer-events: none; /* 터치 이벤트가 겹쳐서 씹히는 현상 방지 */
+    /* 뿅! 하고 나타나는 애니메이션 */
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: translate(-50%, -50%) scale(0); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
