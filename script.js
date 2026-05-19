@@ -59,41 +59,51 @@ backBtn.addEventListener('click', function() {
     mainTitle.innerText = '🍻 오늘의 술게임 🍻';
 });
 
-// 4. 대망의 '운명의 뽑기' 룰렛 효과!
+// 4. 대망의 '운명의 뽑기' (스르륵 멈추는 룰렛 효과 업그레이드)
 drawBtn.addEventListener('click', function() {
-    // 이미 돌아가고 있으면 클릭 무시 (중복 실행 방지)
     if (isSpinning) return; 
 
-    // 현재 모드에 맞는 배열을 선택
     const gameList = (currentMode === 'large') ? largeGames : smallGames;
 
     isSpinning = true;
     drawBtn.innerText = "뽑는 중... ⏳"; 
-    drawBtn.style.backgroundColor = "#555"; // 버튼 비활성화 느낌 색상
+    drawBtn.style.background = "#555"; // 비활성화 느낌
+    drawBtn.style.boxShadow = "none";
 
-    let count = 0;
+    let spinCount = 0;
+    const maxSpins = 30; // 총 돌아가는 횟수 (기존 20 -> 30으로 늘림)
+    let delay = 40; // 처음 돌아가는 속도 (엄청 빠름)
 
-    // 0.05초(50ms)마다 텍스트를 무작위로 계속 바꿈 (슈육 돌아가는 효과)
-    const rouletteInterval = setInterval(function() {
+    // 스르륵 효과를 위한 재귀 함수
+    function spin() {
+        // 랜덤으로 하나 뽑아서 화면에 보여주기
         const randomIndex = Math.floor(Math.random() * gameList.length);
         resultText.innerText = gameList[randomIndex];
-        count++;
+        spinCount++;
 
-        // 20번 정도(약 1초) 돌아갔으면 멈추고 결과 발표!
-        if (count > 20) {
-            clearInterval(rouletteInterval); // 타이머 정지
-
-            // 진짜 최종 결과 하나 뽑기
+        // 아직 덜 돌았으면 계속 돌리기
+        if (spinCount < maxSpins) {
+            // 핵심: 마지막 10번 남았을 때부터 딜레이를 팍팍 늘려서 브레이크를 건다!
+            if (spinCount > maxSpins - 10) {
+                delay += 40; // 속도가 점점 느려짐 (스르륵 효과)
+            }
+            setTimeout(spin, delay); // 변경된 딜레이만큼 이따가 다시 돌리기
+        } 
+        // 다 돌았으면 최종 결과 발표
+        else {
             const finalIndex = Math.floor(Math.random() * gameList.length);
             const finalGame = gameList[finalIndex];
 
-            // 결과를 노란색으로 크고 굵게 보여주기
-            resultText.innerHTML = `<span style="color:#ffcc00; font-size:1.5em; font-weight:bold;">${finalGame}</span><br><br>시작하세요! 🍻`;
+            // 글자 크기를 키우고 노란색으로 강조 (크기 비율 조절)
+            resultText.innerHTML = `<span style="color:#ffcc00; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#ddd; font-weight:normal;">시작하세요! 🍻</span>`;
 
-            // 상태 원상복구 (다시 뽑을 수 있게)
+            // 버튼 원래대로 예쁘게 복구
             isSpinning = false;
-            drawBtn.innerText = "다시 뽑기 🎲"; 
-            drawBtn.style.backgroundColor = "#ff3366"; 
+            drawBtn.innerText = "다시 돌리기 🎲"; 
+            drawBtn.style.background = "linear-gradient(135deg, #ff3366, #ff6b33)";
+            drawBtn.style.boxShadow = "0 10px 25px rgba(255, 51, 102, 0.5)";
         }
-    }, 50); 
+    }
+
+    spin(); // 룰렛 돌리기 시작!
 });
