@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>오늘의 술게임</title>
-    <link rel="apple-touch-icon" href="icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
         <div id="setup-screen">
-            <h1>🍻 오늘의 술게임 🍻</h1>
-            
+            <h1>오늘의 술게임 🍻</h1>
             <div class="input-card">
                 <p>지금 몇 명이서 마시고 있나요?</p>
                 <div class="input-row">
@@ -32,10 +30,19 @@
 
         <div id="touch-game-screen" style="display: none;">
             <div id="touch-back-btn">🔙 탈출</div>
-            <h2 id="touch-instruction">모두 화면에<br>손가락을 올리세요! 👆></h2>
+            <h2 id="touch-instruction">모두 화면에<br>손가락을 올리세요! 👆</h2>
             <div id="touch-canvas"></div>
         </div>
-        
+
+        <div id="odd-even-screen" style="display: none;">
+            <div id="oe-back-btn">🔙 탈출</div>
+            <h2>홀짝 게임 🎲</h2>
+            <div id="oe-content">
+                <p id="oe-question">동전은 던져졌다... 과연 결과는?</p>
+                <h1 id="oe-result" style="display: none;">홀!</h1>
+            </div>
+            <button id="oe-check-btn">결과 확인하기 👀</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
