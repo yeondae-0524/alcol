@@ -11,35 +11,46 @@ const playerCountInput = document.getElementById('player-count');
 let isSpinning = false;
 let currentFilteredGames = []; // 입력된 인원에 맞는 게임들만 담길 배열
 
-// 🎮 마스터 게임 리스트 (최소/최대 인원 조건 포함)
+// 🎮 마스터 게임 리스트 (최소/최대 인원 조건 완벽 세팅)
 const allGames = [
-    // 2~4명 소수 정예 피지컬/눈치 게임
-    { name: "묵찌빠 ✊✌️🖐️", min: 2, max: 4 },
-    { name: "참참참 👈👉", min: 2, max: 4 },
-    { name: "홀짝 🎲", min: 2, max: 4 },
-    { name: "디비디비딥 👽", min: 2, max: 4 },
-    { name: "가위바위보 하나빼기 ✌️✊", min: 2, max: 4 },
-    { name: "손바닥 밀기 ✋🤚", min: 2, max: 3 },
-    { name: "눈싸움 👀", min: 2, max: 2 },
-    
-    // 인원수 상관없이 언제나 재밌는 게임
-    { name: "제로 ✊🖐️", min: 2, max: 20 },
-    { name: "초성 게임 🔠", min: 2, max: 20 },
-    { name: "베스킨라빈스 31 🍦", min: 2, max: 20 },
-    { name: "손병호 게임 🖐️", min: 2, max: 20 },
-    { name: "훈민정음 🗣️", min: 2, max: 20 },
-    
-    // 4명 이상 다수 인원 텐션업 게임
-    { name: "딸기 3비트 🍓", min: 4, max: 20 },
-    { name: "딸기 버스 🚌", min: 4, max: 20 },
-    { name: "공산당 게임 🚩", min: 4, max: 20 },
-    { name: "바니바니 🐰", min: 4, max: 20 },
-    { name: "출석부 📝", min: 4, max: 20 },
-    { name: "지목게임 🎯", min: 3, max: 20 },
-    { name: "더 게임 오브 데스 👆", min: 4, max: 20 },
-    { name: "사랑의 빵 🔫", min: 3, max: 20 },
-    { name: "어목조동 🐟", min: 4, max: 20 },
-    { name: "동조목어 ⏪", min: 4, max: 20 }
+    // 2인 이상 (소수 정예 피지컬 & 빠른 텐션)
+    { name: "제로 ✊🖐️", min: 2, max: 5 },
+    { name: "터치게임 📱", min: 2, max: 5 },
+    { name: "묵찌빠 ✊✌️🖐️", min: 2, max: 2},
+    { name: "홀짝 🎲", min: 2, max: 2 },
+    { name: "지하철 🚇", min: 2, max: 10 },
+    { name: "딸기 2진수 🔢", min: 2, max: 10 },
+
+    // 3인 이상 (눈치 & 두뇌 회전 시작)
+    { name: "눈치게임 👀", min: 3, max: 10 },
+    { name: "고래고래 🐳", min: 3, max: 10 },
+    { name: "훈민정음 🗣️", min: 3, max: 10 },
+    { name: "딸기당근수박참외메론 🍉", min: 3, max: 10 },
+    { name: "베스킨라빈스 31 🍦", min: 3, max: 10 },
+
+    // 4인 이상 (다수 인원 텐션 폭발, 주력 게임들)
+    { name: "딸기 3비트 🍓", min: 4, max: 10 },
+    { name: "딸기 버스 🚌", min: 4, max: 10 },
+    { name: "레코레코이이 🎵", min: 4, max: 10 },
+    { name: "공산당 게임 🚩", min: 4, max: 10 },
+    { name: "민주당 게임 🗽", min: 4, max: 10 },
+    { name: "침묵의 공공칠빵 🤫", min: 4, max: 10 },
+    { name: "바니바니 🐰", min: 4, max: 10 },
+    { name: "슈퍼마리오 🍄", min: 4, max: 10 },
+    { name: "호빵찐빵대빵 🫓", min: 4, max: 10 },
+    { name: "출석부 📝", min: 4, max: 10 },
+    { name: "부석출 🔄", min: 4, max: 10 },
+    { name: "손병호 게임 🖐️", min: 4, max: 10 },
+    { name: "사랑의 빵 🔫", min: 4, max: 10 },
+    { name: "어목조동 🐟", min: 4, max: 10 },
+    { name: "동조목어 ⏪", min: 4, max: 10 },
+
+    // 5인 이상 (다수 전용 타겟팅/지목 게임)
+    { name: "딸기 두부 🧊", min: 5, max: 10 },
+    { name: "딸기 두부 지목 👈", min: 5, max: 10 },
+    { name: "두부 게임 🟪", min: 5, max: 10 },
+    { name: "지목게임 🎯", min: 5, max: 10 },
+    { name: "더 게임 오브 데스 👆", min: 5, max: 10 }
 ];
 
 // 1. 인원수 입력하고 시작하기 버튼 눌렀을 때
