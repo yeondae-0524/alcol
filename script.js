@@ -1,110 +1,112 @@
-// 1. 화면에 있는 요소들 다 불러오기
-const mainTitle = document.getElementById('main-title');
-const buttonGroup = document.getElementById('button-group');
+// HTML 요소들 가져오기
+const setupScreen = document.getElementById('setup-screen');
 const gameScreen = document.getElementById('game-screen');
-
-const smallGroupBtn = document.getElementById('small-group');
-const largeGroupBtn = document.getElementById('large-group');
+const startBtn = document.getElementById('start-btn');
 const backBtn = document.getElementById('back-button');
 const drawBtn = document.getElementById('draw-button');
 const resultText = document.getElementById('result-text');
+const playerCountInput = document.getElementById('player-count');
 
-// 2. 게임 리스트 데이터 구축
+// 상태 변수
+let isSpinning = false;
+let currentFilteredGames = []; // 입력된 인원에 맞는 게임들만 담길 배열
 
-// 4인 이상 텐션업 게임 리스트 (총 28개)
-const largeGames = [
-    "터치게임 📱", "지하철 🚇", "눈치게임 👀", "딸기 3비트 🍓", 
-    "딸기 버스 🚌", "딸기 2진수 🔢", "딸기 두부 🍓", "딸기 두부 지목 👈", 
-    "두부 게임 🟪", "고래고래 🐳", "레코레코이이 🎵", "공산당 게임 🚩", 
-    "민주당 게임 🗽", "침묵의 공공칠빵 🤫", "바니바니 🐰", "슈퍼마리오 🍄", 
-    "호빵찐빵대빵 🫓", "출석부 📝", "부석출 🔄", "훈민정음 🗣️", 
-    "딸기당근수박참외메론 🍉", "지목게임 🎯", "손병호 게임 🖐️", 
-    "더 게임 오브 데스 👆", "베스킨라빈스 31 🍦", "사랑의 빵 🔫", 
-    "어목조동 🐟", "동조목어 ⏪", "울트라 369 ✖️"
+// 🎮 마스터 게임 리스트 (최소/최대 인원 조건 포함)
+const allGames = [
+    // 2~4명 소수 정예 피지컬/눈치 게임
+    { name: "묵찌빠 ✊✌️🖐️", min: 2, max: 4 },
+    { name: "참참참 👈👉", min: 2, max: 4 },
+    { name: "홀짝 🎲", min: 2, max: 4 },
+    { name: "디비디비딥 👽", min: 2, max: 4 },
+    { name: "가위바위보 하나빼기 ✌️✊", min: 2, max: 4 },
+    { name: "손바닥 밀기 ✋🤚", min: 2, max: 3 },
+    { name: "눈싸움 👀", min: 2, max: 2 },
+    
+    // 인원수 상관없이 언제나 재밌는 게임
+    { name: "제로 ✊🖐️", min: 2, max: 20 },
+    { name: "초성 게임 🔠", min: 2, max: 20 },
+    { name: "베스킨라빈스 31 🍦", min: 2, max: 20 },
+    { name: "손병호 게임 🖐️", min: 2, max: 20 },
+    { name: "훈민정음 🗣️", min: 2, max: 20 },
+    
+    // 4명 이상 다수 인원 텐션업 게임
+    { name: "딸기 3비트 🍓", min: 4, max: 20 },
+    { name: "딸기 버스 🚌", min: 4, max: 20 },
+    { name: "공산당 게임 🚩", min: 4, max: 20 },
+    { name: "바니바니 🐰", min: 4, max: 20 },
+    { name: "출석부 📝", min: 4, max: 20 },
+    { name: "지목게임 🎯", min: 3, max: 20 },
+    { name: "더 게임 오브 데스 👆", min: 4, max: 20 },
+    { name: "사랑의 빵 🔫", min: 3, max: 20 },
+    { name: "어목조동 🐟", min: 4, max: 20 },
+    { name: "동조목어 ⏪", min: 4, max: 20 }
 ];
 
-// 2~3인 소수정예 게임 리스트 (추후 업데이트 예정)
-const smallGames = [
-    "콘텐츠 준비 중... ⏳", 
-    "아이디어를 짜내는 중입니다 🤔"
-];
+// 1. 인원수 입력하고 시작하기 버튼 눌렀을 때
+startBtn.addEventListener('click', function() {
+    const count = parseInt(playerCountInput.value);
 
-let currentMode = '';   // 현재 어떤 버튼을 누르고 들어왔는지 기억하는 변수
-let isSpinning = false; // 뽑기가 돌아가고 있는 중인지 확인 (광클 방지)
+    // 유효성 검사
+    if (isNaN(count) || count < 2) {
+        alert("최소 2명 이상 입력해주세요! 🍻");
+        return;
+    }
 
-// 3. 메인 화면 버튼 이벤트 (화면 전환)
+    // 🔥 핵심: 입력한 인원에 맞는 게임만 필터링해서 뽑아내기
+    currentFilteredGames = allGames
+        .filter(game => count >= game.min && count <= game.max)
+        .map(game => game.name); // 이름만 따로 배열로 만들기
 
-// 2~3인용 버튼을 눌렀을 때
-smallGroupBtn.addEventListener('click', function() {
-    buttonGroup.style.display = 'none';
+    // 화면 전환
+    setupScreen.style.display = 'none';
     gameScreen.style.display = 'block';
-    mainTitle.innerText = '👥 2~3인 소수정예';
-    currentMode = 'small'; 
-    resultText.innerHTML = "어떤 게임이 나올까요?<br>아래 버튼을 눌러주세요!";
+    
+    // 초기화
+    resultText.innerHTML = `현재 <b style="color:#FF5A5F">${count}명</b>!<br>어떤 게임이 나올까요?`;
 });
 
-// 4인 이상 버튼을 눌렀을 때
-largeGroupBtn.addEventListener('click', function() {
-    buttonGroup.style.display = 'none';
-    gameScreen.style.display = 'block';
-    mainTitle.innerText = '🔥 4인 이상 텐션업';
-    currentMode = 'large'; 
-    resultText.innerHTML = "어떤 게임이 나올까요?<br>아래 버튼을 눌러주세요!";
-});
-
-// 처음으로 돌아가기 버튼을 눌렀을 때
+// 2. 다시 인원수 설정하러 돌아가기
 backBtn.addEventListener('click', function() {
-    if (isSpinning) return; // 룰렛이 돌아가는 도중에는 도망가지 못하게 막기
+    if (isSpinning) return;
+    
     gameScreen.style.display = 'none';
-    buttonGroup.style.display = 'flex';
-    mainTitle.innerText = '🍻 오늘의 술게임 🍻';
+    setupScreen.style.display = 'block';
+    resultText.innerHTML = "어떤 게임이 나올까요?<br>아래 버튼을 눌러주세요!";
 });
 
-// 4. 대망의 '운명의 뽑기' (스르륵 멈추는 룰렛 효과 업그레이드)
+// 3. 룰렛 돌리기 로직
 drawBtn.addEventListener('click', function() {
     if (isSpinning) return; 
 
-    const gameList = (currentMode === 'large') ? largeGames : smallGames;
-
     isSpinning = true;
     drawBtn.innerText = "뽑는 중... ⏳"; 
-    drawBtn.style.background = "#555"; // 비활성화 느낌
+    drawBtn.style.background = "#8B95A1"; // 회색으로 비활성화 느낌
     drawBtn.style.boxShadow = "none";
 
     let spinCount = 0;
-    const maxSpins = 30; // 총 돌아가는 횟수 (기존 20 -> 30으로 늘림)
-    let delay = 40; // 처음 돌아가는 속도 (엄청 빠름)
+    const maxSpins = 30; 
+    let delay = 40; 
 
-    // 스르륵 효과를 위한 재귀 함수
     function spin() {
-        // 랜덤으로 하나 뽑아서 화면에 보여주기
-        const randomIndex = Math.floor(Math.random() * gameList.length);
-        resultText.innerText = gameList[randomIndex];
+        const randomIndex = Math.floor(Math.random() * currentFilteredGames.length);
+        resultText.innerText = currentFilteredGames[randomIndex];
         spinCount++;
 
-        // 아직 덜 돌았으면 계속 돌리기
         if (spinCount < maxSpins) {
-            // 핵심: 마지막 10번 남았을 때부터 딜레이를 팍팍 늘려서 브레이크를 건다!
-            if (spinCount > maxSpins - 10) {
-                delay += 40; // 속도가 점점 느려짐 (스르륵 효과)
-            }
-            setTimeout(spin, delay); // 변경된 딜레이만큼 이따가 다시 돌리기
-        } 
-        // 다 돌았으면 최종 결과 발표
-        else {
-            const finalIndex = Math.floor(Math.random() * gameList.length);
-            const finalGame = gameList[finalIndex];
+            if (spinCount > maxSpins - 10) delay += 40; 
+            setTimeout(spin, delay); 
+        } else {
+            const finalIndex = Math.floor(Math.random() * currentFilteredGames.length);
+            const finalGame = currentFilteredGames[finalIndex];
 
-            // 글자 크기를 키우고 노란색으로 강조 (크기 비율 조절)
-            resultText.innerHTML = `<span style="color:#ffcc00; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#ddd; font-weight:normal;"></span>`;
+            // 결과 발표
+            resultText.innerHTML = `<span style="color:#FF5A5F; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#8B95A1; font-weight:normal;">마셔 마셔! 🍻</span>`;
 
-            // 버튼 원래대로 예쁘게 복구
             isSpinning = false;
             drawBtn.innerText = "다시 돌리기 🎲"; 
-            drawBtn.style.background = "linear-gradient(135deg, #ff3366, #ff6b33)";
-            drawBtn.style.boxShadow = "0 10px 25px rgba(255, 51, 102, 0.5)";
+            drawBtn.style.background = "#FF5A5F"; // 원래 색 복구
+            drawBtn.style.boxShadow = "0 8px 20px rgba(255, 90, 95, 0.25)";
         }
     }
-
-    spin(); // 룰렛 돌리기 시작!
+    spin(); 
 });
