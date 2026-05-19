@@ -17,7 +17,8 @@ body {
     max-width: 400px; /* 스마트폰 크기 정도로 제한 */
     padding: 20px;
 
-    transform: translate Y(-150px);
+    /* 아래쪽에 투명한 쿠션을 100px만큼 둬서 전체 박스를 위로 밀어 올립니다 */
+    margin-bottom: 100px;
 }
 
 /* 메인 타이틀 */
