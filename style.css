@@ -17,7 +17,7 @@ body {
     max-width: 400px; /* 스마트폰 크기 정도로 제한 */
     padding: 20px;
 
-    transform: translate Y(-50px);
+    transform: translate Y(-100px);
 }
 
 /* 메인 타이틀 */
