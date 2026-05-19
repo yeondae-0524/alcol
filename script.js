@@ -96,7 +96,7 @@ const allGames = [
     { name: "더 게임 오브 데스 👆", min: 5, max: 10 }
 ];
 
-// 🌶️ 극악무도 킹받는 랜덤 도발 멘트 리스트 (17개 전원 복구 완료!)
+// 🌶️ 극악무도 킹받는 랜덤 도발 멘트 리스트
 const spicyComments = [
     "원샷 못하면 오늘 밤 전여친/전남친한테 '자니?' 카톡 보냄 📱",
     "반샷하면 지금 당장 인스타 스토리에 엽사 박제함 📸",
@@ -128,11 +128,16 @@ const trapCards = [
 
 // 1. 인원수 입력하고 시작
 startBtn.addEventListener('click', function() {
-    const count = parseInt(playerCountInput.value);
+    let count = parseInt(playerCountInput.value); // ⭐ 값을 변경할 수 있도록 let으로 수정
 
     if (isNaN(count) || count < 2) {
         alert("최소 2명 이상 입력해주세요! 🍻");
         return;
+    }
+
+    // ⭐ 핵심 보정 로직: 10명이 넘어가면 무조건 10명짜리 게임이 돌아가도록 제한!
+    if (count > 10) {
+        count = 10;
     }
 
     currentFilteredGames = allGames
@@ -189,25 +194,19 @@ drawBtn.addEventListener('click', function() {
             if (spinCount > maxSpins - 10) delay += 40; 
             spinTimeoutId = setTimeout(spin, delay); 
         } else {
-            // ⭐ 5% 확률로 함정 카드 발동!
-            const isTrapCard = Math.random() < 0.05; 
+            const isTrapCard = Math.random() < 0.10; 
 
             if (isTrapCard) {
-                // 🚨 함정 카드 당첨 로직
                 const randomTrap = trapCards[Math.floor(Math.random() * trapCards.length)];
-                
                 resultText.innerHTML = `<span style="color:#FF0000; font-size:1.3em; font-weight:900; text-shadow: 2px 2px 4px rgba(255,0,0,0.3); line-height: 1.4;">💀 함정 카드 💀<br>${randomTrap}</span>`;
-                
                 if (navigator.vibrate) navigator.vibrate([500]); 
                 playBuzzer();
             } else {
-                // 🎲 일반 게임 당첨 로직 (17개 매운맛 멘트 포함)
                 const finalIndex = Math.floor(Math.random() * currentFilteredGames.length);
                 const finalGame = currentFilteredGames[finalIndex];
                 const randomComment = spicyComments[Math.floor(Math.random() * spicyComments.length)];
 
                 resultText.innerHTML = `<span style="color:#FF5A5F; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#8B95A1; font-weight:normal; margin-top:10px; display:block;">${randomComment}</span>`;
-                
                 if (navigator.vibrate) navigator.vibrate([100, 50, 200]); 
                 playTada();
             }
