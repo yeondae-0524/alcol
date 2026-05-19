@@ -9,27 +9,56 @@ const playerCountInput = document.getElementById('player-count');
 
 // 상태 변수
 let isSpinning = false;
-let currentFilteredGames = []; // 입력된 인원에 맞는 게임들만 담길 배열
-let spinTimeoutId = null;      // ⭐ 룰렛 타이머를 멈추기 위한 비상 브레이크 ID 변수
+let currentFilteredGames = []; 
+let spinTimeoutId = null;      
+
+// 🎵 오디오 컨텍스트 세팅 (코드로 직접 신디사이저 효과음을 만듭니다!)
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+// 🔊 '드르륵' 틱 소리 함수
+function playTick() {
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.type = 'square'; // 약간 거친 기계식 룰렛 느낌
+    osc.frequency.setValueAtTime(150, audioCtx.currentTime); // 낮은음
+    gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.05);
+}
+
+// 🔊 '짠!' 당첨 소리 함수
+function playTada() {
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.type = 'triangle'; // 경쾌한 느낌
+    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // 도
+    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // 미
+    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // 솔 (빠르게 빰빰빰!)
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.8);
+}
 
 // 🎮 마스터 게임 리스트 (최종본)
 const allGames = [
-    // 2인 이상 (소수 정예 피지컬 & 빠른 텐션)
     { name: "제로 ✊🖐️", min: 2, max: 5 },
     { name: "터치게임 📱", min: 2, max: 5 },
     { name: "묵찌빠 ✊✌️🖐️", min: 2, max: 2 },
     { name: "홀짝 🎲", min: 2, max: 2 },
     { name: "지하철 🚇", min: 2, max: 10 },
     { name: "딸기 2진수 🔢", min: 2, max: 10 },
-
-    // 3인 이상 (눈치 & 두뇌 회전 시작)
     { name: "눈치게임 👀", min: 3, max: 10 },
     { name: "고래고래 🐳", min: 3, max: 10 },
     { name: "훈민정음 🗣️", min: 3, max: 10 },
     { name: "딸기당근수박참외메론 🍉", min: 3, max: 10 },
     { name: "베스킨라빈스 31 🍦", min: 3, max: 10 },
-
-    // 4인 이상 (다수 인원 텐션 폭발, 주력 게임들)
     { name: "딸기 3비트 🍓", min: 4, max: 10 },
     { name: "딸기 버스 🚌", min: 4, max: 10 },
     { name: "레코레코이이 🎵", min: 4, max: 10 },
@@ -45,8 +74,6 @@ const allGames = [
     { name: "사랑의 빵 🔫", min: 4, max: 10 },
     { name: "어목조동 🐟", min: 4, max: 10 },
     { name: "동조목어 ⏪", min: 4, max: 10 },
-
-    // 5인 이상 (다수 전용 타겟팅/지목 게임)
     { name: "딸기 두부 🧊", min: 5, max: 10 },
     { name: "딸기 두부 지목 👈", min: 5, max: 10 },
     { name: "두부 게임 🟪", min: 5, max: 10 },
@@ -73,20 +100,16 @@ startBtn.addEventListener('click', function() {
     resultText.innerHTML = `현재 <b style="color:#FF5A5F">${count}명</b>!<br>어떤 게임이 나올까요?`;
 });
 
-// 2. 다시 인원수 설정하러 돌아가기 (⭐ 룰렛 도는 중 탈출 기능 탑재!)
+// 2. 다시 인원수 설정하러 돌아가기 (탈출 기능)
 backBtn.addEventListener('click', function() {
-    // 만약 룰렛이 돌아가는 중이었다면?
     if (isSpinning) {
-        clearTimeout(spinTimeoutId); // 1. 돌고 있던 타이머를 강제로 파괴(급브레이크)
-        isSpinning = false;          // 2. 스피닝 상태 해제
-        
-        // 3. 뽑기 버튼 디자인 원상복구
+        clearTimeout(spinTimeoutId); 
+        isSpinning = false;          
         drawBtn.innerText = "운명의 뽑기 🎲"; 
         drawBtn.style.background = "#FF5A5F"; 
         drawBtn.style.boxShadow = "0 8px 20px rgba(255, 90, 95, 0.25)";
     }
     
-    // 화면 전환
     gameScreen.style.display = 'none';
     setupScreen.style.display = 'block';
     resultText.innerHTML = "어떤 게임이 나올까요?<br>아래 버튼을 눌러주세요!";
@@ -95,6 +118,11 @@ backBtn.addEventListener('click', function() {
 // 3. 룰렛 돌리기 로직
 drawBtn.addEventListener('click', function() {
     if (isSpinning) return; 
+
+    // 브라우저 정책상 사용자 클릭 시 오디오 권한 강제 허용
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
 
     isSpinning = true;
     drawBtn.innerText = "뽑는 중... ⏳"; 
@@ -110,15 +138,22 @@ drawBtn.addEventListener('click', function() {
         resultText.innerText = currentFilteredGames[randomIndex];
         spinCount++;
 
+        // 📱 안드로이드 진동 & 🔊 드르륵 소리 재생
+        if (navigator.vibrate) navigator.vibrate(15); 
+        playTick(); 
+
         if (spinCount < maxSpins) {
             if (spinCount > maxSpins - 10) delay += 40; 
-            // ⭐ 타이머 작동 시 ID를 변수에 저장해둡니다 (언제든 끌 수 있게)
             spinTimeoutId = setTimeout(spin, delay); 
         } else {
             const finalIndex = Math.floor(Math.random() * currentFilteredGames.length);
             const finalGame = currentFilteredGames[finalIndex];
 
             resultText.innerHTML = `<span style="color:#FF5A5F; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#8B95A1; font-weight:normal;">마셔 마셔! 🍻</span>`;
+
+            // 📱 안드로이드 짠! 진동 & 🔊 짠! 소리 재생
+            if (navigator.vibrate) navigator.vibrate([100, 50, 200]); 
+            playTada();
 
             isSpinning = false;
             drawBtn.innerText = "다시 돌리기 🎲"; 
