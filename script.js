@@ -136,12 +136,13 @@ startBtn.addEventListener('click', function() {
     }
 
     // ⭐ 핵심 보정 로직: 10명이 넘어가면 무조건 10명짜리 게임이 돌아가도록 제한!
-    if (count > 10) {
-        count = 10;
+    let filterCount = count;
+    if (filterCount > 10) {
+        filterCount = 10;
     }
 
     currentFilteredGames = allGames
-        .filter(game => count >= game.min && count <= game.max)
+        .filter(game => filterCount >= game.min && filterCount <= game.max)
         .map(game => game.name);
 
     setupScreen.style.display = 'none';
