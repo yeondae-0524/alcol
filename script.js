@@ -10,13 +10,14 @@ const playerCountInput = document.getElementById('player-count');
 // 상태 변수
 let isSpinning = false;
 let currentFilteredGames = []; // 입력된 인원에 맞는 게임들만 담길 배열
+let spinTimeoutId = null;      // ⭐ 룰렛 타이머를 멈추기 위한 비상 브레이크 ID 변수
 
-// 🎮 마스터 게임 리스트 (최소/최대 인원 조건 완벽 세팅)
+// 🎮 마스터 게임 리스트 (최종본)
 const allGames = [
     // 2인 이상 (소수 정예 피지컬 & 빠른 텐션)
     { name: "제로 ✊🖐️", min: 2, max: 5 },
     { name: "터치게임 📱", min: 2, max: 5 },
-    { name: "묵찌빠 ✊✌️🖐️", min: 2, max: 2},
+    { name: "묵찌빠 ✊✌️🖐️", min: 2, max: 2 },
     { name: "홀짝 🎲", min: 2, max: 2 },
     { name: "지하철 🚇", min: 2, max: 10 },
     { name: "딸기 2진수 🔢", min: 2, max: 10 },
@@ -57,29 +58,35 @@ const allGames = [
 startBtn.addEventListener('click', function() {
     const count = parseInt(playerCountInput.value);
 
-    // 유효성 검사
     if (isNaN(count) || count < 2) {
         alert("최소 2명 이상 입력해주세요! 🍻");
         return;
     }
 
-    // 🔥 핵심: 입력한 인원에 맞는 게임만 필터링해서 뽑아내기
     currentFilteredGames = allGames
         .filter(game => count >= game.min && count <= game.max)
-        .map(game => game.name); // 이름만 따로 배열로 만들기
+        .map(game => game.name);
 
-    // 화면 전환
     setupScreen.style.display = 'none';
     gameScreen.style.display = 'block';
     
-    // 초기화
     resultText.innerHTML = `현재 <b style="color:#FF5A5F">${count}명</b>!<br>어떤 게임이 나올까요?`;
 });
 
-// 2. 다시 인원수 설정하러 돌아가기
+// 2. 다시 인원수 설정하러 돌아가기 (⭐ 룰렛 도는 중 탈출 기능 탑재!)
 backBtn.addEventListener('click', function() {
-    if (isSpinning) return;
+    // 만약 룰렛이 돌아가는 중이었다면?
+    if (isSpinning) {
+        clearTimeout(spinTimeoutId); // 1. 돌고 있던 타이머를 강제로 파괴(급브레이크)
+        isSpinning = false;          // 2. 스피닝 상태 해제
+        
+        // 3. 뽑기 버튼 디자인 원상복구
+        drawBtn.innerText = "운명의 뽑기 🎲"; 
+        drawBtn.style.background = "#FF5A5F"; 
+        drawBtn.style.boxShadow = "0 8px 20px rgba(255, 90, 95, 0.25)";
+    }
     
+    // 화면 전환
     gameScreen.style.display = 'none';
     setupScreen.style.display = 'block';
     resultText.innerHTML = "어떤 게임이 나올까요?<br>아래 버튼을 눌러주세요!";
@@ -91,7 +98,7 @@ drawBtn.addEventListener('click', function() {
 
     isSpinning = true;
     drawBtn.innerText = "뽑는 중... ⏳"; 
-    drawBtn.style.background = "#8B95A1"; // 회색으로 비활성화 느낌
+    drawBtn.style.background = "#8B95A1"; 
     drawBtn.style.boxShadow = "none";
 
     let spinCount = 0;
@@ -105,17 +112,17 @@ drawBtn.addEventListener('click', function() {
 
         if (spinCount < maxSpins) {
             if (spinCount > maxSpins - 10) delay += 40; 
-            setTimeout(spin, delay); 
+            // ⭐ 타이머 작동 시 ID를 변수에 저장해둡니다 (언제든 끌 수 있게)
+            spinTimeoutId = setTimeout(spin, delay); 
         } else {
             const finalIndex = Math.floor(Math.random() * currentFilteredGames.length);
             const finalGame = currentFilteredGames[finalIndex];
 
-            // 결과 발표
             resultText.innerHTML = `<span style="color:#FF5A5F; font-size:1.2em; font-weight:900;">${finalGame}</span><br><span style="font-size:0.4em; color:#8B95A1; font-weight:normal;">마셔 마셔! 🍻</span>`;
 
             isSpinning = false;
             drawBtn.innerText = "다시 돌리기 🎲"; 
-            drawBtn.style.background = "#FF5A5F"; // 원래 색 복구
+            drawBtn.style.background = "#FF5A5F"; 
             drawBtn.style.boxShadow = "0 8px 20px rgba(255, 90, 95, 0.25)";
         }
     }
