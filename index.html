@@ -2,43 +2,33 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <!-- 모바일 앱처럼 화면이 제멋대로 확대/축소되지 않게 고정해 주는 아주 중요한 마법의 주문입니다 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>오늘의 술게임</title>
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 전체 화면을 감싸는 가장 큰 박스 -->
     <div id="game-container">
-        
-        <!-- 상단 타이틀 -->
-        <h1 id="main-title">🍻 오늘의 술게임 🍻</h1>
-
-        <div id="button-group">
-            <button class="mode-button" id="small-group">
-                👥 2~3인 소수정예<br>
-                <span>도란도란 두뇌/눈치 게임</span>
-            </button>
-
-            <button class="mode-button" id="large-group">
-                🔥 4인 이상 텐션업<br>
-                <span>시끌벅적 순발력/단체 게임</span>
-            </button>
+        <div id="setup-screen">
+            <h1>오늘의 술게임 🍻</h1>
+            
+            <div class="input-card">
+                <p>지금 몇 명이서 마시고 있나요?</p>
+                <div class="input-row">
+                    <input type="number" id="player-count" min="2" max="20" placeholder="2">
+                    <span>명</span>
+                </div>
+                <button id="start-btn">게임 추천받기 🚀</button>
+            </div>
         </div>
 
         <div id="game-screen" style="display: none;">
-            
-            <div id="back-button">🔙 메인으로</div>
-            
+            <div id="back-button">🔙 인원 다시 설정</div>
             <div id="card-area">
                 <p id="result-text">어떤 게임이 나올까요?<br>아래 버튼을 눌러주세요!</p>
             </div>
-            
             <button id="draw-button">운명의 뽑기 🎲</button>
-            
         </div>
-        
     </div>
     <script src="script.js"></script>
 </body>
