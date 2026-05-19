@@ -6,6 +6,11 @@ const backBtn = document.getElementById('back-button');
 const drawBtn = document.getElementById('draw-button');
 const resultText = document.getElementById('result-text');
 const playerCountInput = document.getElementById('player-count');
+const touchGameScreen = document.getElementById('touch-game-screen');
+const touchCanvas = document.getElementById('touch-canvas');
+const touchBackBtn = document.getElementById('touch-back-btn');
+let activeFingers = {}; // 화면에 닿아있는 손가락들을 기억할 임시 저장소
+const colors = ['#FF3B30', '#FF9500', '#FFCC00', '#4CD964', '#5AC8FA', '#007AFF', '#5856D6', '#FF2D55']; // 힙한 네온 컬러들
 
 // 상태 변수
 let isSpinning = false;
@@ -212,6 +217,14 @@ drawBtn.addEventListener('click', function() {
                 playTada();
             }
 
+            // ⭐ 여기에 추가! (터치게임 당첨 시 1.5초 뒤에 터치 화면으로 강제 납치)
+            if (finalGame === "터치게임 📱") {
+                setTimeout(() => {
+                    gameScreen.style.display = 'none';
+                    touchGameScreen.style.display = 'flex';
+                }, 1500); 
+            }
+
             isSpinning = false;
             drawBtn.innerText = "다시 돌리기 🎲"; 
             drawBtn.style.background = "#FF5A5F"; 
@@ -220,3 +233,74 @@ drawBtn.addEventListener('click', function() {
     }
     spin(); 
 });
+
+// ==========================================
+// 👆 터치 게임 전용 멀티 터치 로직 👆
+// ==========================================
+
+// 1. 터치 게임 화면에서 뒤로가기
+touchBackBtn.addEventListener('click', () => {
+    touchGameScreen.style.display = 'none';
+    gameScreen.style.display = 'block';
+    touchCanvas.innerHTML = ''; // 그려진 동그라미들 싹 청소
+    activeFingers = {}; // 손가락 기억 초기화
+});
+
+// 2. 화면에 손가락이 닿았을 때 (touchstart)
+touchCanvas.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // 스크롤되거나 화면 넘어가는 거 꽉 막기
+    const touches = e.changedTouches;
+    
+    for (let i = 0; i < touches.length; i++) {
+        const touch = touches[i];
+        
+        // 동그라미(div) 만들기
+        const circle = document.createElement('div');
+        circle.classList.add('finger-circle');
+        
+        // 손가락 좌표로 동그라미 이동
+        circle.style.left = touch.clientX + 'px';
+        circle.style.top = touch.clientY + 'px';
+        
+        // 랜덤 네온 색상 입히기
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        circle.style.backgroundColor = randomColor;
+        circle.style.boxShadow = `0 0 25px ${randomColor}`;
+        
+        // 화면에 붙이고, 나중에 지울 수 있게 activeFingers에 이름표 달아서 저장
+        touchCanvas.appendChild(circle);
+        activeFingers[touch.identifier] = circle;
+    }
+});
+
+// 3. 손가락을 움직일 때 (touchmove)
+touchCanvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touches = e.changedTouches;
+    for (let i = 0; i < touches.length; i++) {
+        const touch = touches[i];
+        const circle = activeFingers[touch.identifier]; // 내 손가락 동그라미 찾기
+        if (circle) {
+            // 손가락 따라 동그라미 위치 업데이트
+            circle.style.left = touch.clientX + 'px';
+            circle.style.top = touch.clientY + 'px';
+        }
+    }
+});
+
+// 4. 손가락을 뗐을 때 (touchend, touchcancel)
+function removeTouch(e) {
+    e.preventDefault();
+    const touches = e.changedTouches;
+    for (let i = 0; i < touches.length; i++) {
+        const touch = touches[i];
+        const circle = activeFingers[touch.identifier];
+        if (circle) {
+            circle.remove(); // 화면에서 펑! 지우기
+            delete activeFingers[touch.identifier]; // 기억 저장소에서도 삭제
+        }
+    }
+}
+
+touchCanvas.addEventListener('touchend', removeTouch);
+touchCanvas.addEventListener('touchcancel', removeTouch);
